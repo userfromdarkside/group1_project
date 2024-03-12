@@ -1,1 +1,50 @@
 # Hi guys, we will start coding here.
+using System;
+
+class Bank
+{
+    private const string DefaultUsername = "minhtienphan";
+    private const string DefaultPassword = "12345Q&A";
+    private const int MaxAttempts = 3;
+
+    public void Login()
+    {
+        int attempts = 0;
+
+        do
+        {
+            Console.Write("Enter your username: ");
+            string usernameInput = Console.ReadLine();
+
+            Console.Write("Enter your password: ");
+            string passwordInput = Console.ReadLine();
+
+            if (ValidateCredentials(usernameInput, passwordInput))
+            {
+                Console.WriteLine("Welcome, user!");
+                return;
+            }
+
+            Console.WriteLine("Invalid username or password. Please try again.");
+            attempts++;
+
+        } while (attempts < MaxAttempts);
+
+        Console.WriteLine("Too many failed attempts. Please contact customer support.");
+    }
+
+    private bool ValidateCredentials(string username, string password)
+    {
+        return username == DefaultUsername && password == DefaultPassword;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Bank bank = new Bank();
+        bank.Login();
+    }
+}
+
