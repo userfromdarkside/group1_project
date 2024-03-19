@@ -1,4 +1,63 @@
 # Hi guys, we will start coding here.
+
+
+class Bank1
+{
+    public string Name { get; private set; }
+    public int Age { get; private set; }
+    public string Email { get; private set; }
+    public string Password { get; private set; }
+
+    public Bank1()
+    {
+        Console.WriteLine("Welcome to our bank! Please provide the following details to create your account:");
+
+        Console.Write("Name: ");
+        Name = Console.ReadLine();
+
+        bool validAge = false;
+        while (!validAge)
+        {
+            Console.Write("Age: ");
+            string ageInput = Console.ReadLine();
+            if (int.TryParse(ageInput, out int age))
+            {
+                Age = age;
+                validAge = true;
+            }
+            else
+            {
+                Console.WriteLine("Please enter a valid age (a whole number).");
+            }
+        }
+
+        Console.Write("Email: ");
+        Email = Console.ReadLine();
+
+        Console.Write("Password: ");
+        Password = Console.ReadLine();
+    }
+
+    public void DisplayAccountInfo()
+    {
+        Console.WriteLine("\nAccount Information:");
+        Console.WriteLine($"Name: {Name}");
+        Console.WriteLine($"Age: {Age}");
+        Console.WriteLine($"Email: {Email}");
+        // You generally wouldn't want to display the password, but for demonstration purposes:
+        Console.WriteLine($"Password: {Password}");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Bank bankAccount = new Bank();
+        bankAccount.DisplayAccountInfo();
+    }
+}
+
 using System;
 
 class Bank
