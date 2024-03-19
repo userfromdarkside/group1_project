@@ -1,5 +1,4 @@
-# Hi guys, we will start coding here.
-Using System;
+using System;
 
 class Bank1
 {
@@ -49,61 +48,63 @@ class Bank1
     }
 }
 
+class LoginManager
+{
+    private string expectedEmail;
+    private string expectedPassword;
+    private int loginAttempts = 0;
+    private const int maxAttempts = 3;
+
+    public LoginManager(string email, string password)
+    {
+        expectedEmail = email;
+        expectedPassword = password;
+    }
+
+    public bool Login()
+    {
+        while (loginAttempts < maxAttempts)
+        {
+            Console.WriteLine("Please log in:");
+            Console.Write("Email: ");
+            string emailInput = Console.ReadLine();
+            Console.Write("Password: ");
+            string passwordInput = Console.ReadLine();
+
+            if (emailInput == expectedEmail && passwordInput == expectedPassword)
+            {
+                Console.WriteLine("Login successful!");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Invalid email or password. Please try again.");
+                loginAttempts++;
+            }
+        }
+
+        Console.WriteLine("You have exceeded the maximum number of login attempts.");
+        return false;
+    }
+}
+
 class Program
 {
     static void Main(string[] args)
     {
-        Bank bankAccount = new Bank();
+        Bank1 bankAccount = new Bank1();
         bankAccount.DisplayAccountInfo();
-    }
-}
 
-# task1
+        LoginManager loginManager = new LoginManager(bankAccount.Email, bankAccount.Password);
 
-class Bank
-{
-    private const string DefaultUsername = "minhtienphan";
-    private const string DefaultPassword = "12345Q&A";
-    private const int MaxAttempts = 3;
-
-    public void Login()
-    {
-        int attempts = 0;
-
-        do
+        bool loggedIn = loginManager.Login();
+        if (loggedIn)
         {
-            Console.Write("Enter your username: ");
-            string usernameInput = Console.ReadLine();
-
-            Console.Write("Enter your password: ");
-            string passwordInput = Console.ReadLine();
-
-            if (ValidateCredentials(usernameInput, passwordInput))
-            {
-                Console.WriteLine("Welcome, user!");
-                return;
-            }
-
-            Console.WriteLine("Invalid username or password. Please try again.");
-            attempts++;
-
-        } while (attempts < MaxAttempts);
-
-        Console.WriteLine("Too many failed attempts. Please contact customer support.");
-    }
-
-    private bool ValidateCredentials(string username, string password)
-    {
-        return username == DefaultUsername && password == DefaultPassword;
+            // Proceed with whatever you need to do after successful login
+        }
+        else
+        {
+            // Handle case when login fails (e.g., exit program or display appropriate message)
+        }
     }
 }
-
-class Program
-{
-    static void Main()
-    {
-        Bank bank = new Bank();
-        bank.Login();
-    }
-}
-
