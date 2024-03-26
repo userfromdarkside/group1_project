@@ -1,110 +1,159 @@
 using System;
+using System.Collections.Generic;
 
-class Bank1
+namespace BankApplication
 {
-    public string Name { get; private set; }
-    public int Age { get; private set; }
-    public string Email { get; private set; }
-    public string Password { get; private set; }
-
-    public Bank1()
+    class Program
     {
-        Console.WriteLine("Welcome to our bank! Please provide the following details to create your account:");
+        static Dictionary<string, string> accounts = new Dictionary<string, string>();
+        static string currentUser = "";
 
-        Console.Write("Name: ");
-        Name = Console.ReadLine();
-
-        bool validAge = false;
-        while (!validAge)
+        static void Main(string[] args)
         {
-            Console.Write("Age: ");
-            string ageInput = Console.ReadLine();
-            if (int.TryParse(ageInput, out int age))
+            Console.WriteLine("Welcome to the Bank Application!");
+
+            while (true)
             {
-                Age = age;
-                validAge = true;
-            }
-            else
-            {
-                Console.WriteLine("Please enter a valid age (a whole number).");
+                Console.WriteLine("1. Login");
+                Console.WriteLine("2. Signup");
+                Console.WriteLine("3. Quit");
+
+                Console.Write("Choose an option: ");
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        Login();
+                        break;
+                    case "2":
+                        Signup();
+                        break;
+                    case "3":
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
             }
         }
 
-        Console.Write("Email: ");
-        Email = Console.ReadLine();
-
-        Console.Write("Password: ");
-        Password = Console.ReadLine();
-    }
-
-    public void DisplayAccountInfo()
-    {
-        Console.WriteLine("\nAccount Information:");
-        Console.WriteLine($"Name: {Name}");
-        Console.WriteLine($"Age: {Age}");
-        Console.WriteLine($"Email: {Email}");
-        // You generally wouldn't want to display the password, but for demonstration purposes:
-        Console.WriteLine($"Password: {Password}");
-    }
-}
-
-class LoginManager
-{
-    private string expectedEmail;
-    private string expectedPassword;
-    private int loginAttempts = 0;
-    private const int maxAttempts = 3;
-
-    public LoginManager(string email, string password)
-    {
-        expectedEmail = email;
-        expectedPassword = password;
-    }
-
-    public bool Login()
-    {
-        while (loginAttempts < maxAttempts)
+        static void Login()
         {
-            Console.WriteLine("Please log in:");
-            Console.Write("Email: ");
-            string emailInput = Console.ReadLine();
-            Console.Write("Password: ");
-            string passwordInput = Console.ReadLine();
+            int attempts = 3;
 
-            if (emailInput == expectedEmail && passwordInput == expectedPassword)
+            while (attempts > 0)
             {
-                Console.WriteLine("Login successful!");
-                return true;
+                Console.Write("Enter your email: ");
+                string email = Console.ReadLine();
+
+                Console.Write("Enter your password: ");
+                string password = Console.ReadLine();
+
+                if (accounts.ContainsKey(email) && accounts[email] == password)
+                {
+                    currentUser = email;
+                    Console.WriteLine("Login successful!");
+                    MainMenu();
+                    return;
+                }
+                else
+                {
+                    attempts--;
+                    Console.WriteLine($"Invalid email or password. {attempts} attempts left.");
+                }
             }
-            else
-            {
-                Console.WriteLine("Invalid email or password. Please try again.");
-                loginAttempts++;
-            }
+
+            Console.WriteLine("You've exceeded the maximum number of login attempts.");
         }
 
-        Console.WriteLine("You have exceeded the maximum number of login attempts.");
-        return false;
-    }
-}
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        Bank1 bankAccount = new Bank1();
-        bankAccount.DisplayAccountInfo();
-
-        LoginManager loginManager = new LoginManager(bankAccount.Email, bankAccount.Password);
-
-        bool loggedIn = loginManager.Login();
-        if (loggedIn)
+        static void Signup()
         {
-            // Proceed with whatever you need to do after successful login
+            Console.Write("Enter your name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Enter your age: ");
+            int age;
+            while (!int.TryParse(Console.ReadLine(), out age) || age < 18 || age > 80)
+            {
+                Console.WriteLine("Invalid age. Age must be between 18 and 80.");
+                Console.Write("Enter your age: ");
+            }
+
+            Console.Write("Enter your email: ");
+            string email = Console.ReadLine();
+            while (!email.EndsWith("@gmail.com"))
+            {
+                Console.WriteLine("Invalid email. Email must end with '@gmail.com'.");
+                Console.Write("Enter your email: ");
+                email = Console.ReadLine();
+            }
+
+            Console.Write("Enter your password: ");
+            string password = Console.ReadLine();
+            while (password.Length < 8 || !ContainsSymbol(password))
+            {
+                Console.WriteLine("Invalid password. Password must be at least 8 characters long and contain at least one symbol.");
+                Console.Write("Enter your password: ");
+                password = Console.ReadLine();
+            }
+
+            accounts.Add(email, password);
+            Console.WriteLine("Signup successful! You can now login.");
         }
-        else
+
+        static bool ContainsSymbol(string password)
         {
-            // Handle case when login fails (e.g., exit program or display appropriate message)
+            foreach (char c in password)
+            {
+                if (!char.IsLetterOrDigit(c))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        static void MainMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine("\n1. View Balance");
+                Console.WriteLine("2. Deposit");
+                Console.WriteLine("3. Withdraw");
+                Console.WriteLine("4. Transfer Money");
+                Console.WriteLine("5. Quit");
+
+                Console.Write("Choose an option: ");
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        // View Balance
+                        Console.WriteLine("Balance: $1000"); // Placeholder value
+                        break;
+                    case "2":
+                        // Deposit
+                        Console.WriteLine("Deposit function placeholder.");
+                        break;
+                    case "3":
+                        // Withdraw
+                        Console.WriteLine("Withdraw function placeholder.");
+                        break;
+                    case "4":
+                        // Transfer Money
+                        Console.WriteLine("Transfer money function placeholder.");
+                        break;
+                    case "5":
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
+            }
         }
     }
 }
